@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 
 /**
@@ -27,7 +28,7 @@ public class BeerOrderControllerV2 {
 
     @BeerOrderReadPermissionV2
     @GetMapping
-    public BeerOrderPagedList listOrders(@AuthenticationPrincipal User user,
+    public BeerOrderPagedList listOrders(@AuthenticationPrincipal Principal user,
                                          @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                          @RequestParam(value = "pageSize", required = false) Integer pageSize){
 
@@ -39,8 +40,8 @@ public class BeerOrderControllerV2 {
             pageSize = DEFAULT_PAGE_SIZE;
         }
 
-        if (user.getCustomer() != null) {
-            return beerOrderService.listOrders(user.getCustomer().getId(), PageRequest.of(pageNumber, pageSize));
+        if (user.getName()!= null) {
+            return beerOrderService.listOrders(user.getName(), PageRequest.of(pageNumber, pageSize));
         } else {
             return beerOrderService.listOrders(PageRequest.of(pageNumber, pageSize));
         }
